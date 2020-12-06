@@ -279,18 +279,23 @@ document.addEventListener('DOMContentLoaded', () => {
             if (xDiff > 0) {
                 /* left swipe */
                 swipe(2)
+                updatecolor()
             } else {
                 /* right swipe */
                 swipe(-2)
+                updatecolor()
             }
         } else {
             if (yDiff > 0) {
                 /* up swipe */
                 swipe(1)
+                updatecolor()
                 console.log("up")
             } else {
                 /* down swipe */
+                evt.preventDefault();
                 swipe(-1)
+                updatecolor()
                 console.log("down")
             }
         }
