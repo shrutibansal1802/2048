@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultdisplay = document.querySelector('.result')
 
     let squares = []
-    let totalscore =0;
+    let totalscore = 0;
     function createboard() {
         ;
         for (i = 0; i < 16; i++) {
@@ -25,26 +25,26 @@ document.addEventListener('DOMContentLoaded', () => {
     function generaterandom() {
         var randgrid = Math.floor(Math.random() * 16)
         var randnum = Math.random() > 0.3 ? 2 : 4;
-        if (squares[randgrid].innerHTML == 0)
-            {squares[randgrid].innerHTML = randnum
+        if (squares[randgrid].innerHTML == 0) {
+            squares[randgrid].innerHTML = randnum
             checklost()
-            }
+        }
         else
             generaterandom();
 
     }
     function checklost() {
-        let zeroremaining =0
-        for(i = 0; i <16; i++)
-        {
-            if(squares[i].innerHTML==0)
+        let zeroremaining = 0
+        for (i = 0; i < 16; i++) {
+            if (squares[i].innerHTML == 0)
                 zeroremaining++
         }
-            if(zeroremaining==0)
-                {resultdisplay.innerHTML ="You Lost"
-                let newgame = document.createElement('button')
-                newgame.innerHTML ="new game"}
-        
+        if (zeroremaining == 0) {
+            resultdisplay.innerHTML = "You Lost"
+            let newgame = document.createElement('button')
+            newgame.innerHTML = "new game"
+        }
+
     }
 
 
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let row = [0, 1, 2, 3]
         let dir = []
         let totalchange = 0
-     
+
 
         if (direction == 1 || direction == -1) {
             dir = [...col]
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
             for (j = 0; j < 4; j++) {
-                totalscore+=newrow[j]
+                totalscore += newrow[j]
                 if (direction == 1 || direction == -1)
                     squares[i + dir[j]].innerHTML = newrow[j]
                 else
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 totalchange++
             }
         }
-        scoredisplay.innerHTML =Math.floor( totalscore/10)
+        scoredisplay.innerHTML = Math.floor(totalscore / 10)
         return totalchange
     }
 
@@ -145,9 +145,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     let changes;
 
-    function swipe( key){
-        changes =move(key)
-        switch(key){
+    function swipe(key) {
+        changes = move(key)
+        switch (key) {
             case -1:
                 combinedown()
                 break;
@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 combineright()
                 break;
         }
-         move(key)
+        move(key)
         if (changes)  //only generate new number iff there are any changes 
             generaterandom()
     }
@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
             switch (parseInt(cell.innerHTML)) {
                 case 0:
                     color = "287271"
-                    font =  "287271"
+                    font = "287271"
                     break;
                 case 2:
                     color = "8AB17D"
@@ -244,71 +244,59 @@ document.addEventListener('DOMContentLoaded', () => {
 
         updatecolor()
     }
-    function  handleswipe(swipedir) {
 
-        console.log(swipedir)
-
-        if (swipedir == 'right') //right
-            swipe(-2)
-        if (swipedir == 'left') //left
-            swipe(2)
-        if (swipedir == 'up') //up key
-            swipe(1)
-        if (swipedir == 'down') //down key
-            swipe(-1)
-
-        updatecolor()
-    }
 
     document.addEventListener('keyup', keypress)
-    
-    function swipedetect(el, callback){
-  
-        var touchsurface = el,
-        swipedir,
-        startX,
-        startY,
-        distX,
-        distY,
-        threshold = 150, //required min distance traveled to be considered swipe
-        restraint = 100, // maximum distance allowed at the same time in perpendicular direction
-        allowedTime = 300, // maximum time allowed to travel that distance
-        elapsedTime,
-        startTime,
-        handleswipe = callback || function(swipedir){}
-      
-        touchsurface.addEventListener('touchstart', function(e){
-            var touchobj = e.changedTouches[0]
-            swipedir = 'none'
-            dist = 0
-            startX = touchobj.pageX
-            startY = touchobj.pageY
-            startTime = new Date().getTime() // record time when finger first makes contact with surface
-            e.preventDefault()
-        }, false)
-      
-        touchsurface.addEventListener('touchmove', function(e){
-            e.preventDefault() // prevent scrolling when inside DIV
-        }, false)
-      
-        touchsurface.addEventListener('touchend', function(e){
-            var touchobj = e.changedTouches[0]
-            distX = touchobj.pageX - startX // get horizontal dist traveled by finger while in contact with surface
-            distY = touchobj.pageY - startY // get vertical dist traveled by finger while in contact with surface
-            elapsedTime = new Date().getTime() - startTime // get time elapsed
-            if (elapsedTime <= allowedTime){ // first condition for awipe met
-                if (Math.abs(distX) >= threshold && Math.abs(distY) <= restraint){ // 2nd condition for horizontal swipe met
-                    swipedir = (distX < 0)? 'left' : 'right' // if dist traveled is negative, it indicates left swipe
-                }
-                else if (Math.abs(distY) >= threshold && Math.abs(distX) <= restraint){ // 2nd condition for vertical swipe met
-                    swipedir = (distY < 0)? 'up' : 'down' // if dist traveled is negative, it indicates up swipe
-                }
-            }
-            handleswipe(swipedir)
-            e.preventDefault()
-        }, false)
+
+    document.addEventListener('touchstart', handleTouchStart, false);
+    document.addEventListener('touchmove', handleTouchMove, false);
+
+    var xDown = null;
+    var yDown = null;
+
+    function getTouches(evt) {
+        return evt.touches ||             // browser API
+            evt.originalEvent.touches; // jQuery
     }
 
-    swipedetect(griddisplay,handleswipe(swipedir))
+    function handleTouchStart(evt) {
+        const firstTouch = getTouches(evt)[0];
+        xDown = firstTouch.clientX;
+        yDown = firstTouch.clientY;
+    };
+
+    function handleTouchMove(evt) {
+        if (!xDown || !yDown) {
+            return;
+        }
+        var xUp = evt.touches[0].clientX;
+        var yUp = evt.touches[0].clientY;
+
+        var xDiff = xDown - xUp;
+        var yDiff = yDown - yUp;
+
+        if (Math.abs(xDiff) > Math.abs(yDiff)) {/*most significant*/
+            if (xDiff > 0) {
+                /* left swipe */
+                swipe(2)
+            } else {
+                /* right swipe */
+                swipe(-2)
+            }
+        } else {
+            if (yDiff > 0) {
+                /* up swipe */
+                swipe(1)
+                console.log("up")
+            } else {
+                /* down swipe */
+                swipe(-1)
+                console.log("down")
+            }
+        }
+        /* reset values */
+        xDown = null;
+        yDown = null;
+    };
 
 })
