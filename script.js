@@ -1,0 +1,314 @@
+document.addEventListener('DOMContentLoaded', () => {
+
+    const griddisplay = document.querySelector('.grid')
+    const scoredisplay = document.querySelector('.scoreboard')
+    const resultdisplay = document.querySelector('.result')
+
+    let squares = []
+    let totalscore =0;
+    function createboard() {
+        ;
+        for (i = 0; i < 16; i++) {
+            let square = document.createElement('div')
+            square.innerHTML = 0
+            square.classList.add('cell')
+            griddisplay.appendChild(square)
+            squares.push(square)
+        }
+        generaterandom()
+        generaterandom()
+    }
+    createboard()
+    const cells = document.querySelectorAll('.cell')
+    updatecolor()
+
+    function generaterandom() {
+        var randgrid = Math.floor(Math.random() * 16)
+        var randnum = Math.random() > 0.3 ? 2 : 4;
+        if (squares[randgrid].innerHTML == 0)
+            {squares[randgrid].innerHTML = randnum
+            checklost()
+            }
+        else
+            generaterandom();
+
+    }
+    function checklost() {
+        let zeroremaining =0
+        for(i = 0; i <16; i++)
+        {
+            if(squares[i].innerHTML==0)
+                zeroremaining++
+        }
+            if(zeroremaining==0)
+                {resultdisplay.innerHTML ="You Lost"
+                let newgame = document.createElement('button')
+                newgame.innerHTML ="new game"}
+        
+    }
+
+
+    function move(direction) {
+
+        let col = [0, 4, 8, 12]
+        let row = [0, 1, 2, 3]
+        let dir = []
+        let totalchange = 0
+     
+
+        if (direction == 1 || direction == -1) {
+            dir = [...col]
+        }
+        else
+            dir = [...row]
+
+        for (i = 0; i < 4; i++) {
+            let row = []
+            for (j = 0; j < 4; j++) {
+                if (direction == 1 || direction == -1)
+                    row.push(parseInt(squares[i + dir[j]].innerHTML))
+                else
+                    row.push(parseInt(squares[i * 4 + j].innerHTML))
+
+            }
+
+            let filrow = row.filter(num => num)
+            let zeronumber = 4 - filrow.length
+            let zeros = Array(zeronumber).fill(0)
+            let newrow = [];
+            if (direction == -1 || direction == -2) //down swipe and right swipe
+                newrow = zeros.concat(filrow)
+            else //up swipe and left swipe
+                newrow = filrow.concat(zeros)
+
+
+            for (j = 0; j < 4; j++) {
+                totalscore+=newrow[j]
+                if (direction == 1 || direction == -1)
+                    squares[i + dir[j]].innerHTML = newrow[j]
+                else
+                    squares[i * 4 + j].innerHTML = newrow[j]
+            }
+            if (JSON.stringify(row) != JSON.stringify(newrow)) {
+                console.log(row, newrow)
+                totalchange++
+            }
+        }
+        scoredisplay.innerHTML =Math.floor( totalscore/10)
+        return totalchange
+    }
+
+
+    function combineleft() {
+        for (i = 0; i < 15; i += 4) {
+            for (j = i; j < i + 3; j++) {
+                if (squares[j].innerHTML == squares[j + 1].innerHTML) {
+                    squares[j].innerHTML = 2 * parseInt(squares[j].innerHTML)
+                    squares[j + 1].innerHTML = 0
+                    j++
+                }
+            }
+        }
+    }
+    function combineright() {
+        for (i = 3; i < 16; i += 4) {
+            for (j = i; j > i - 3; j--) {
+                if (squares[j].innerHTML == squares[j - 1].innerHTML) {
+                    squares[j].innerHTML = 2 * parseInt(squares[j].innerHTML)
+                    squares[j - 1].innerHTML = 0
+                    j--
+                }
+            }
+        }
+    }
+    function combineup() {
+        for (i = 0; i < 4; i++) {
+            for (j = i; j < 12; j += 4) {
+                if (squares[j].innerHTML == squares[j + 4].innerHTML) {
+                    squares[j].innerHTML = 2 * parseInt(squares[j].innerHTML)
+                    squares[j + 4].innerHTML = 0
+                    j += 4
+                }
+            }
+        }
+    }
+    function combinedown() {
+        for (i = 12; i < 16; i++) {
+            for (j = i; j > 3; j -= 4) {
+                if (squares[j].innerHTML == squares[j - 4].innerHTML) {
+                    squares[j].innerHTML = 2 * parseInt(squares[j].innerHTML)
+                    squares[j - 4].innerHTML = 0
+                    j -= 4
+                }
+            }
+        }
+    }
+    let changes;
+
+    function swipe( key){
+        changes =move(key)
+        switch(key){
+            case -1:
+                combinedown()
+                break;
+            case 1:
+                combineup()
+                break;
+            case 2:
+                combineleft()
+                break;
+            case -2:
+                combineright()
+                break;
+        }
+         move(key)
+        if (changes)  //only generate new number iff there are any changes 
+            generaterandom()
+    }
+
+    function updatecolor() {
+        let cellarray = Array.from(cells)
+        cellarray.forEach(cell => {
+            let classname = parseInt(cell.innerHTML)
+            let color;
+            let font;
+            switch (parseInt(cell.innerHTML)) {
+                case 0:
+                    color = "287271"
+                    font =  "287271"
+                    break;
+                case 2:
+                    color = "8AB17D"
+                    font = "003"
+                    break;
+                case 4:
+                    color = "BABB74"
+                    font = "000"
+                    break;
+                case 8:
+                    color = "E9C46A"
+                    font = "000"
+                    break;
+                case 16:
+                    color = "EFB366"
+                    font = "000"
+                    break;
+                case 32:
+                    color = "F4A261"
+                    font = "fff"
+                    break;
+                case 64:
+                    color = "EE8959"
+                    font = "fff"
+                    break;
+                case 128:
+                    color = "E45C3A"
+                    font = "fff"
+                    break;
+                case 256:
+                    color = "E66B4C"
+                    font = "fff"
+                    break;
+                case 512:
+                    color = "E8785C"
+                    font = "fff"
+                    break;
+                case 1024:
+                    color = "B33819"
+                    font = "fff"
+                    break;
+                case 2048:
+                    color = "cc4e14"
+                    font = "fff"
+                default:
+                    color = "776e65"
+                    font = "fff"
+            }
+            cell.style.backgroundColor = `#${color}`
+            cell.style.color = `#${font}`
+
+        })
+    }
+    function keypress(e) {
+
+        console.log(e.keyCode)
+
+        if (e.keyCode == 39) //right
+            swipe(-2)
+        if (e.keyCode == 37) //left
+            swipe(2)
+        if (e.keyCode == 38) //up key
+            swipe(1)
+        if (e.keyCode == 40) //down key
+            swipe(-1)
+
+        updatecolor()
+    }
+    function  handleswipe(swipedir) {
+
+        console.log(swipedir)
+
+        if (swipedir == 'right') //right
+            swipe(-2)
+        if (swipedir == 'left') //left
+            swipe(2)
+        if (swipedir == 'up') //up key
+            swipe(1)
+        if (swipedir == 'down') //down key
+            swipe(-1)
+
+        updatecolor()
+    }
+
+    document.addEventListener('keyup', keypress)
+    
+    function swipedetect(el, callback){
+  
+        var touchsurface = el,
+        swipedir,
+        startX,
+        startY,
+        distX,
+        distY,
+        threshold = 150, //required min distance traveled to be considered swipe
+        restraint = 100, // maximum distance allowed at the same time in perpendicular direction
+        allowedTime = 300, // maximum time allowed to travel that distance
+        elapsedTime,
+        startTime,
+        handleswipe = callback || function(swipedir){}
+      
+        touchsurface.addEventListener('touchstart', function(e){
+            var touchobj = e.changedTouches[0]
+            swipedir = 'none'
+            dist = 0
+            startX = touchobj.pageX
+            startY = touchobj.pageY
+            startTime = new Date().getTime() // record time when finger first makes contact with surface
+            e.preventDefault()
+        }, false)
+      
+        touchsurface.addEventListener('touchmove', function(e){
+            e.preventDefault() // prevent scrolling when inside DIV
+        }, false)
+      
+        touchsurface.addEventListener('touchend', function(e){
+            var touchobj = e.changedTouches[0]
+            distX = touchobj.pageX - startX // get horizontal dist traveled by finger while in contact with surface
+            distY = touchobj.pageY - startY // get vertical dist traveled by finger while in contact with surface
+            elapsedTime = new Date().getTime() - startTime // get time elapsed
+            if (elapsedTime <= allowedTime){ // first condition for awipe met
+                if (Math.abs(distX) >= threshold && Math.abs(distY) <= restraint){ // 2nd condition for horizontal swipe met
+                    swipedir = (distX < 0)? 'left' : 'right' // if dist traveled is negative, it indicates left swipe
+                }
+                else if (Math.abs(distY) >= threshold && Math.abs(distX) <= restraint){ // 2nd condition for vertical swipe met
+                    swipedir = (distY < 0)? 'up' : 'down' // if dist traveled is negative, it indicates up swipe
+                }
+            }
+            handleswipe(swipedir)
+            e.preventDefault()
+        }, false)
+    }
+
+    swipedetect(griddisplay,handleswipe(swipedir))
+
+})
