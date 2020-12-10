@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let squares = []
     let totalscore = 0;
     function createboard() {
-        ;
+        
         for (i = 0; i < 16; i++) {
             let square = document.createElement('div')
             square.innerHTML = 0
@@ -25,9 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function generaterandom() {
         var randgrid = Math.floor(Math.random() * 16)
         var randnum = Math.random() > 0.3 ? 2 : 4;
+        
         if (squares[randgrid].innerHTML == 0) {
             squares[randgrid].innerHTML = randnum
-            checklost()
         }
         else
             generaterandom();
@@ -54,6 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let row = [0, 1, 2, 3]
         let dir = []
         let totalchange = 0
+        totalscore=0
 
 
         if (direction == 1 || direction == -1) {
@@ -90,11 +91,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     squares[i * 4 + j].innerHTML = newrow[j]
             }
             if (JSON.stringify(row) != JSON.stringify(newrow)) {
-                console.log(row, newrow)
+                
                 totalchange++
             }
         }
-        scoredisplay.innerHTML = Math.floor(totalscore / 10)
+        scoredisplay.innerHTML = Math.floor(totalscore )
         return totalchange
     }
 
@@ -147,6 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function swipe(key) {
         changes = move(key)
+        checklost()
         switch (key) {
             case -1:
                 combinedown()
@@ -231,8 +233,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     function keypress(e) {
 
-        console.log(e.keyCode)
-
         if (e.keyCode == 39) //right
             swipe(-2)
         if (e.keyCode == 37) //left
@@ -290,13 +290,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 /* up swipe */
                 swipe(1)
                 updatecolor()
-                console.log("up")
+            
             } else {
                 /* down swipe */
                 evt.preventDefault();
                 swipe(-1)
                 updatecolor()
-                console.log("down")
+            
             }
         }
         /* reset values */
