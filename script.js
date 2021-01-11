@@ -5,44 +5,75 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultdisplay = document.querySelector('.result')
 
     let squares = []
+    let previousMove =[]
     let totalscore = 0;
     function createboard() {
         
         for (i = 0; i < 16; i++) {
-            let square = document.createElement('div')
+            let square = document.createElement('div')  //creating 16 div 
             square.innerHTML = 0
-            square.classList.add('cell')
+            square.classList.add('cell')   //adding cell class to each square
             griddisplay.appendChild(square)
-            squares.push(square)
+            squares.push(square)         // pushed all the grids in square array
         }
+        generaterandom()          // generating 2 random numbers at game start
         generaterandom()
-        generaterandom()
+        previousMove = [...squares]
+        console.log(previousMove)
     }
-    createboard()
+    createboard()      // creating the board for the first time
     const cells = document.querySelectorAll('.cell')
-    updatecolor()
+    updatecolor() // updating colors after game initialization
 
     function generaterandom() {
         var randgrid = Math.floor(Math.random() * 16)
         var randnum = Math.random() > 0.3 ? 2 : 4;
         
         if (squares[randgrid].innerHTML == 0) {
-            squares[randgrid].innerHTML = randnum
+            squares[randgrid].innerHTML = randnum  // generate a number and store it in an empty square otherwise choose another square
         }
         else
-            generaterandom();
+            generaterandom();    
 
     }
+
+
     function checklost() {
-        let zeroremaining = 0
+        let zeroremaining = 0 //check the number of empty boxes
+
         for (i = 0; i < 16; i++) {
             if (squares[i].innerHTML == 0)
                 zeroremaining++
         }
-        if (zeroremaining == 0) {
-            resultdisplay.innerHTML = "You Lost"
-            let newgame = document.createElement('button')
-            newgame.innerHTML = "new game"
+
+        let nomovesleft = true;
+
+        if (zeroremaining == 0 ) {
+
+            for (i = 0; i < 15; i += 4) {
+                for (j = i; j < i + 3; j++) {
+                    if (squares[j].innerHTML == squares[j + 1].innerHTML) {
+                      nomovesleft = false;
+                    }
+                }
+            }
+            for (i = 0; i < 4; i++) {
+                for (j = i; j < 12; j += 4) {
+                    if (squares[j].innerHTML == squares[j + 4].innerHTML) {
+                       nomovesleft = false;
+                    }
+                }
+            }
+            if(nomovesleft)
+            {
+                $('#myModal').on('shown.bs.modal', function () {
+                    $('#myInput').trigger('focus')
+                  })
+                resultdisplay.innerHTML = "You Lost"
+            }
+            
+            // let newgame = document.createElement('button')
+            // newgame.innerHTML = "new game"
         }
 
     }
