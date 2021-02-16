@@ -2,11 +2,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const griddisplay = document.querySelector('.grid')
     const scoredisplay = document.querySelector('.scoreboard')
+    const highScoredisplay = document.querySelector('.highScore');
     const resultdisplay = document.querySelector('.result')
 
     let squares = []
     let previousMove =[]
     let totalscore = 0;
+    let highScore=0
+    highScore = localStorage.getItem('highscore');     // getting the high score from local storage
+    highScoredisplay.innerHTML = Math.floor(highScore);
+
     function createboard() {
         
         for (i = 0; i < 16; i++) {
@@ -126,7 +131,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 totalchange++
             }
         }
-        scoredisplay.innerHTML = Math.floor(totalscore )
+        scoredisplay.innerHTML = Math.floor(totalscore )  //display current score
+        if(totalscore> highScore)
+        {highScore= totalscore;
+        localStorage.setItem('highscore',highScore);      //update high score in local storage
+        }
+        highScoredisplay.innerHTML = Math.floor(highScore)   // display high score in high score board
         return totalchange
     }
 

@@ -22,6 +22,39 @@ body {
     margin: 20px 0px 10px 0px;
     color: #8ab17d;
 }
+#leftbox{
+    float: middle;
+    background-color:#8AB17D;
+    margin: auto;
+    width:150px;
+    height: 30px;
+    line-height: 25px;
+    font-size:small;
+    font-weight: bold;
+    font-style:   sans-serif; 
+    border-radius:5px;
+    border: 2px solid #287271;
+    text-transform: uppercase;
+    color: #23404B;
+}
+#middlebox{
+    float: middle;
+    background-color:#8AB17D;
+    margin: auto;
+    width:150px;
+    height: 30px;
+    font-size:small;
+    line-height: 25px;
+    font-weight: bold;
+    font-style:   sans-serif; 
+    border-radius:5px;
+    border: 2px solid #287271;
+    text-transform: uppercase;
+    color: #23404B;
+}
+#rightbox{
+    float: middle;
+}
 .result{
     font-weight: bold;
     text-shadow:1px 1px 4px  rgb(13, 14, 13);
@@ -29,8 +62,8 @@ body {
 button{
      /* background-color: #287271; */
      background-color:#8AB17D;
-     margin-left: 50px;
-     width:100px;
+     margin: auto;
+     width:150px;
      height: 30px;
      font-size:small;
      font-weight: bold;
